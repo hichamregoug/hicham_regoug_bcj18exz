@@ -3,6 +3,7 @@ package com.school.managementapi.resource;
 import com.school.managementapi.domain.User;
 import com.school.managementapi.domain.UserPrincipal;
 import com.school.managementapi.dto.UserDto;
+import com.school.managementapi.exception.ExceptionHandling;
 import com.school.managementapi.mapper.ModelMapper;
 import com.school.managementapi.security.JWTTokenProvider;
 import com.school.managementapi.service.impl.UserServiceImpl;
@@ -23,7 +24,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/users")
-public class UserResource {
+public class UserResource extends ExceptionHandling {
     private final Logger logger = LoggerFactory.getLogger(UserResource.class);
 
     @Autowired
