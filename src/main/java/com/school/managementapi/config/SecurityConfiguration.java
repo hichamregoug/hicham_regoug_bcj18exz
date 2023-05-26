@@ -1,5 +1,8 @@
 package com.school.managementapi.config;
 
+import com.school.managementapi.security.JWTAccessDeniedHandler;
+import com.school.managementapi.security.JWTAuthenticationEntryPoint;
+import com.school.managementapi.security.JWTAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static com.school.managementapi.constant.SecurityConstant.PUBLIC_RESOURCES;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
@@ -28,6 +32,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    private JWTAccessDeniedHandler jwtAccessDeniedHandler;
+
+    @Autowired
+    private JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
+    @Autowired
+    private JWTAuthorizationFilter jwtAuthorizationFilter;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
@@ -38,7 +51,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable().cors().and()
                 .sessionManagement().sessionCreationPolicy(STATELESS)
                 .and().authorizeRequests().antMatchers(PUBLIC_RESOURCES).permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                .and()
+                .exceptionHandling().accessDeniedHandler(jwtAccessDeniedHandler)
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .and()
+                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean

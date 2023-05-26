@@ -8,4 +8,8 @@ public class SecurityConstant {
     public static final String TOKEN_VERIFICATION_MESSAGE = "Token cannot be verified";
     public static final String JWT_TOKEN_HEADER = "Jwt-Token";
     public static final String[] PUBLIC_RESOURCES = { "/users/login", "/users/register" };
+    public static final String DENIED_MESSAGE = "You do not have permission to access this resource";
+    public static final String FORBIDDEN_MESSAGE = "You need to log in to access this resource";
+    public static final String OPTIONS_HTTP_METHOD ="OPTIONS";
+    public static final String TOKEN_PREFIX = "Bearer ";
 }
